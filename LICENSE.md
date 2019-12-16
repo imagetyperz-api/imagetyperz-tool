@@ -1,0 +1,6 @@
+License
+
+---
+
+**GNU GPLv3**
+
