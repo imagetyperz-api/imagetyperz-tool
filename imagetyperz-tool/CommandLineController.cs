@@ -75,6 +75,7 @@ namespace imagetyperz_tool
             if (d.ContainsKey("-type")) this._arguments.set_type(d["-type"]);
             if (d.ContainsKey("-v3minscore")) this._arguments.set_v3_score(d["-v3minscore"]);
             if (d.ContainsKey("-v3action")) this._arguments.set_v3_action(d["-v3action"]);
+            if (d.ContainsKey("-datas")) this._arguments.set_datas(d["-datas"]);
             if (d.ContainsKey("-useragent")) this._arguments.set_user_agent(d["-useragent"]);
             if (d.ContainsKey("-proxy")) this._arguments.set_proxy(d["-proxy"]);
 
@@ -160,6 +161,7 @@ namespace imagetyperz_tool
                     if (!string.IsNullOrWhiteSpace(a.get_v3_action())) d.Add("v3_action", a.get_v3_action());
                     if (!string.IsNullOrWhiteSpace(a.get_v3_score())) d.Add("v3_min_score", a.get_v3_score());
                     if (!string.IsNullOrWhiteSpace(a.get_user_agent())) d.Add("user_agent", a.get_user_agent());
+                    if (!string.IsNullOrWhiteSpace(a.get_datas())) d.Add("data-s", a.get_datas());
                     if (!string.IsNullOrWhiteSpace(a.get_proxy())) d.Add("proxy", a.get_proxy());
                     string captcha_id = i.submit_recaptcha(d);
                     this.show_output(captcha_id);

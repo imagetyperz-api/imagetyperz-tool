@@ -131,6 +131,7 @@ If you don't want to compile from source, you can find the `imagetyperz-tool.exe
 - **-v3minscore** (useful when solving v3 recaptcha, when set, has to be a float number, `optional`)
 - **-v3action** (once again, in v3 solving, check reCAPTCHA docs to find out how it's used, `optional`)
 - **-useragent** (when specified, will be used in solving captchas, `optional`)
+- **-datas** (recaptcha data-s value for solving `optional`)
 - **-proxy** (can be `IP:Port` or `IP:Port:User:Password`, for authentication. Used in solving reCAPTCHA, `optional`)
 - **-image** (used when solving image captcha. It's the path of the image file)
 - **-iscase** (case sensitive, `optional` parameter for image captcha)

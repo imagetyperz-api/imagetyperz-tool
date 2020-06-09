@@ -21,6 +21,7 @@ namespace imagetyperz_tool
 
         private string _proxy = "";
         private string _token = "";
+        private string _datas = "";
 
         // v3
         private string _type = "0";
@@ -256,6 +257,16 @@ namespace imagetyperz_tool
         public void set_proxy(string _proxy)
         {
             this._proxy = _proxy;
+        }
+
+        public string get_datas()
+        {
+            return _datas;
+        }
+
+        public void set_datas(string datas)
+        {
+            this._datas = datas;
         }
     }
 }
