@@ -43,20 +43,6 @@ namespace imagetyperz_tool
             // check what we're looking for
             // ----------------------------
             if (d.ContainsKey("-token")) this._arguments.set_token(d["-token"]);  // we have token
-            else
-            {
-                if (!d.ContainsKey("-username"))
-                {
-                    throw new Exception("-username argument is required or use -token");
-                }
-                if (!d.ContainsKey("-password"))
-                {
-                    throw new Exception("-password argument is required or use -token");
-                }
-                this._arguments.set_username(d["-username"]);
-                this._arguments.set_password(d["-password"]);
-
-            }
 
             // mode
             // ----
@@ -65,11 +51,11 @@ namespace imagetyperz_tool
             this._arguments.set_mode(d["-mode"]);
 
             // args
-            // ----------------------
             if (d.ContainsKey("-pageurl")) this._arguments.set_page_url((d["-pageurl"]));
             if (d.ContainsKey("-sitekey")) this._arguments.set_site_key((d["-sitekey"]));
             if (d.ContainsKey("-captchaid")) this._arguments.set_captcha_id((d["-captchaid"]));
             if (d.ContainsKey("-output")) this._arguments.set_output_file((d["-output"]));
+            if (d.ContainsKey("-response_only")) this._arguments.set_response_only(true);
 
             // reCAPTCHA
             if (d.ContainsKey("-type")) this._arguments.set_type(d["-type"]);
@@ -92,6 +78,9 @@ namespace imagetyperz_tool
             if (d.ContainsKey("-domain")) this._arguments.set_gt_domain(d["-domain"]);
             if (d.ContainsKey("-challenge")) this._arguments.set_gt_challenge(d["-challenge"]);
             if (d.ContainsKey("-gt")) this._arguments.set_gt_gt(d["-gt"]);
+
+            // tiktok
+            if (d.ContainsKey("-cookie_input")) this._arguments.set_cookie_input(d["-cookie_input"]);
         }
 
         /// <summary>
@@ -119,17 +108,16 @@ namespace imagetyperz_tool
 
             ImageTypersAPI i;
             var token = a.get_token();
-            if (!string.IsNullOrWhiteSpace(token)) i = new ImageTypersAPI(token);
-            else
-            {
-                i = new ImageTypersAPI("");
-                i.set_user_and_password(a.get_username(), a.get_password());
-            }
+            if (string.IsNullOrWhiteSpace(token)) throw new Exception("token is missing");
+            i = new ImageTypersAPI(token);
             switch (a.get_mode())
             {
-                case "solve_image":
+                case "get_balance":
+                    string balance = i.account_balance();
+                    this.show_output(balance);      // show balance
+                    break;
+                case "submit_image":
                     // solve normal captcha
-                    // -------------------------
                     string captcha_file = a.get_captcha_file();
                     if (string.IsNullOrWhiteSpace(captcha_file)) throw new Exception("Invalid captcha file");
                     // optional params
@@ -143,14 +131,14 @@ namespace imagetyperz_tool
                     if (a.get_min_length() != -1) id.Add("minlength", a.get_min_length().ToString());
                     if (a.get_max_length() != -1) id.Add("maxlength", a.get_max_length().ToString());
 
-                    string resp = i.solve_captcha(captcha_file, id);
-                    this.show_output(string.Format("{0}|{1}", i.captcha_id(), resp));
+                    string captcha_id = i.submit_image(captcha_file, id);
+                    this.show_output(captcha_id);
                     break;
                 case "submit_recaptcha":
                     string page_url = a.get_page_url();
                     string site_key = a.get_site_key();
-                    if (string.IsNullOrWhiteSpace(page_url)) throw new Exception("Invalid recaptcha pageurl");
-                    if (string.IsNullOrWhiteSpace(site_key)) throw new Exception("Invalid recaptcha sitekey");
+                    if (string.IsNullOrWhiteSpace(page_url)) throw new Exception("Invalid pageurl");
+                    if (string.IsNullOrWhiteSpace(site_key)) throw new Exception("Invalid sitekey");
 
                     Dictionary<string, string> d = new Dictionary<string, string>();
                     d.Add("page_url", page_url);
@@ -163,45 +151,44 @@ namespace imagetyperz_tool
                     if (!string.IsNullOrWhiteSpace(a.get_user_agent())) d.Add("user_agent", a.get_user_agent());
                     if (!string.IsNullOrWhiteSpace(a.get_datas())) d.Add("data-s", a.get_datas());
                     if (!string.IsNullOrWhiteSpace(a.get_proxy())) d.Add("proxy", a.get_proxy());
-                    string captcha_id = i.submit_recaptcha(d);
-                    this.show_output(captcha_id);
-                    break;
-                case "retrieve_captcha":
-                    string recaptcha_id = a.get_captcha_id();
-                    if (string.IsNullOrWhiteSpace(recaptcha_id)) throw new Exception("recaptcha id is invalid");
-                    string recaptcha_response = i.retrieve_captcha(recaptcha_id);     // get recaptcha response
-                    this.show_output(recaptcha_response);       // show response
+                    if (!string.IsNullOrWhiteSpace(a.get_user_agent())) d.Add("user_agent", a.get_user_agent());
+                    string cid = i.submit_recaptcha(d);
+                    this.show_output(cid);
                     break;
                 case "submit_hcaptcha":
                     string page_urlh = a.get_page_url();
                     string site_keyh = a.get_site_key();
-                    if (string.IsNullOrWhiteSpace(page_urlh)) throw new Exception("Invalid hCAPTCHA pageurl");
-                    if (string.IsNullOrWhiteSpace(site_keyh)) throw new Exception("Invalid hCAPTCHA sitekey");
+                    if (string.IsNullOrWhiteSpace(page_urlh)) throw new Exception("Invalid pageurl");
+                    if (string.IsNullOrWhiteSpace(site_keyh)) throw new Exception("Invalid sitekey");
                     Dictionary<string, string> dh = new Dictionary<string, string>();
-                    dh.Add("page_url", string.Format("{0}--hcaptcha", page_urlh));
+                    if (!string.IsNullOrWhiteSpace(a.get_proxy())) dh.Add("proxy", a.get_proxy());
+                    if (!string.IsNullOrWhiteSpace(a.get_user_agent())) dh.Add("user_agent", a.get_user_agent());
+                    dh.Add("page_url", page_urlh);
                     dh.Add("sitekey", site_keyh);
-                    string hcaptcha_id_sub = i.submit_recaptcha(dh);
+                    string hcaptcha_id_sub = i.submit_hcaptcha(dh);
                     this.show_output(hcaptcha_id_sub);
                     break;
                 case "submit_capy":
                     string page_urlc = a.get_page_url();
                     string site_keyc = a.get_site_key();
-                    if (string.IsNullOrWhiteSpace(page_urlc)) throw new Exception("Invalid capy pageurl");
-                    if (string.IsNullOrWhiteSpace(site_keyc)) throw new Exception("Invalid capy sitekey");
+                    if (string.IsNullOrWhiteSpace(page_urlc)) throw new Exception("Invalid pageurl");
+                    if (string.IsNullOrWhiteSpace(site_keyc)) throw new Exception("Invalid sitekey");
 
                     Dictionary<string, string> dc = new Dictionary<string, string>();
-                    dc.Add("page_url", string.Format("{0}--capy", page_urlc));
+                    if (!string.IsNullOrWhiteSpace(a.get_proxy())) dc.Add("proxy", a.get_proxy());
+                    if (!string.IsNullOrWhiteSpace(a.get_user_agent())) dc.Add("user_agent", a.get_user_agent());
+                    dc.Add("page_url", page_urlc);
                     dc.Add("sitekey", site_keyc);
-                    string capy_id_sub = i.submit_recaptcha(dc);
+                    string capy_id_sub = i.submit_capy(dc);
                     this.show_output(capy_id_sub);
                     break;
                 case "submit_geetest":
                     string gt_domain = a.get_gt_domain();
                     string gt_challenge = a.get_gt_challenge();
                     string gt_gt = a.get_gt_gt();
-                    if (string.IsNullOrWhiteSpace(gt_domain)) throw new Exception("Invalid geetest domain");
-                    if (string.IsNullOrWhiteSpace(gt_challenge)) throw new Exception("Invalid geetest challenge");
-                    if (string.IsNullOrWhiteSpace(gt_gt)) throw new Exception("Invalid geetest gt");
+                    if (string.IsNullOrWhiteSpace(gt_domain)) throw new Exception("Invalid domain");
+                    if (string.IsNullOrWhiteSpace(gt_challenge)) throw new Exception("Invalid challenge");
+                    if (string.IsNullOrWhiteSpace(gt_gt)) throw new Exception("Invalid gt");
 
                     Dictionary<string, string> dg = new Dictionary<string, string>();
                     dg.Add("domain", gt_domain);
@@ -209,28 +196,36 @@ namespace imagetyperz_tool
                     dg.Add("gt", gt_gt);
 
                     // optional
+                    if (!string.IsNullOrWhiteSpace(a.get_proxy())) dg.Add("proxy", a.get_proxy());
                     if (!string.IsNullOrWhiteSpace(a.get_user_agent())) dg.Add("user_agent", a.get_user_agent());
-                    // NEEDS API CHANGES
-                    //if (!string.IsNullOrWhiteSpace(a.get_proxy())) dg.Add("proxy", a.get_proxy());
                     string geetest_id_sub = i.submit_geetest(dg);
                     this.show_output(geetest_id_sub);
                     break;
+                case "submit_tiktok":
+                    string page_urlt = a.get_page_url();
+                    string cookie_input = a.get_cookie_input();
+                    if (string.IsNullOrWhiteSpace(page_urlt)) throw new Exception("Invalid pageurl");
+                    if (string.IsNullOrWhiteSpace(cookie_input)) throw new Exception("Invalid cookie_input");
 
-                case "get_balance":
-                    string balance = i.account_balance();
-                    this.show_output(balance);      // show balance
+                    Dictionary<string, string> dcc = new Dictionary<string, string>();
+                    if (!string.IsNullOrWhiteSpace(a.get_proxy())) dcc.Add("proxy", a.get_proxy());
+                    if (!string.IsNullOrWhiteSpace(a.get_user_agent())) dcc.Add("user_agent", a.get_user_agent());
+                    dcc.Add("page_url", page_urlt);
+                    dcc.Add("cookie_input", cookie_input);
+                    string tiktok_id = i.submit_tiktok(dcc);
+                    this.show_output(tiktok_id);
+                    break;
+                case "retrieve_response":
+                    string kid = a.get_captcha_id();
+                    if (string.IsNullOrWhiteSpace(kid)) throw new Exception("id is invalid");
+                    var recaptcha_response = i.retrieve_response(kid);     // get recaptcha response
+                    this.show_output(recaptcha_response);       // show response
                     break;
                 case "set_captcha_bad":
                     string bad_id = a.get_captcha_id();
-                    if (string.IsNullOrWhiteSpace(bad_id)) throw new Exception("captchaid is invalid");
+                    if (string.IsNullOrWhiteSpace(bad_id)) throw new Exception("id is invalid");
                     string response = i.set_captcha_bad(bad_id);        // set it bad
                     this.show_output(response);     // show response
-                    break;
-                case "proxy_status":
-                    string was_used_id = a.get_captcha_id();
-                    if (string.IsNullOrWhiteSpace(was_used_id)) throw new Exception("captchaid is invalid");
-                    string rr = i.was_proxy_used(was_used_id);        // set it bad
-                    this.show_output(rr);     // show response
                     break;
                 default:
                     throw new Exception("invalid mode");
@@ -256,6 +251,31 @@ namespace imagetyperz_tool
             Console.WriteLine(text);        // print to screen
             // save to file, if set
             if (!string.IsNullOrWhiteSpace(this._arguments.get_output_file())) this.save_text(this._arguments.get_output_file(), text);
+        }
+        private void show_output(Dictionary<string, string> p)
+        {
+            string output = "";
+            if (p != null)
+            {
+                if (!this._arguments.get_response_only())
+                {
+                    output = "{\n";
+                    var k = 0;
+                    foreach (var key in p.Keys)
+                    {
+                        string comma = "";
+                        if (k < p.Keys.Count - 1) comma = ",";
+                        output += String.Format("    \"{0}\": \"{1}\"{2}\n", key, p[key], comma);
+                        k += 1;
+                    }
+                    output += "}";
+                }
+                else
+                {
+                    if (p.ContainsKey("Response")) output += p["Response"];
+                }
+            }
+            this.show_output(output);
         }
 
         /// <summary>

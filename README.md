@@ -7,37 +7,29 @@ This tool was developed to easily solve captchas through imagetyperz service, fr
 #### The following captcha types are supported:
 
 - Image captcha (classic)
-
 - reCAPTCHA
 
   - v2
   - invisible
 
   - v3 
-
 - GeeTest
-
 - Capy
-
 - hCAPTCHA
+- Tiktok
 
 #### Other supported methods:
 
 - get account balance
-- get proxy status
 - set captcha bad
 
 
 ## Usage
 
-In order to solve reCAPTCHA, GeeTest, Capy or hCAPTCHA the process is the following:
+The process of solving captcha is the same for all our supported captcha types:
 
 - submit captcha (gives back an ID)
 - retrieve solution using ID
-
-Image captcha solving is different. The submission returns both the ID and solution. No need to make a 2nd request to get the solution.
-
-In case of error `error.txt` file will be created, containing the error
 
 #### Account balance
 
@@ -49,19 +41,15 @@ In order to write output to file use:
 
 #### Image captcha
 
-Solving image captcha is easy. Just set the image parameter and make sure the mode is set correctly.
+```imagetyperz-tool.exe -token YOUR_TOKEN -mode submit_image -image captcha.jpg```
 
-```imagetyperz-tool.exe -token YOUR_TOKEN -mode solve_image -image captcha.jpg```
-
-The response contains both the ID and solution: `1233484|polum`
+Returns back an **ID** which will be used to get the response after captcha was solved or check it's progress
 
 #### reCAPTCHA
 
 ```imagetyperz-tool.exe -token YOUR_TOKEN -mode submit_recaptcha```
 
 ``` -pageurl https://domain.com -sitekey 6ZgGgmzUAAAAALGtLb_FxC0LXm_GwCLyJAffbUCB``` 
-
-**This returns back an ID. Use the ID to regularly check for completion of captcha using the** `retrieve_captcha` **mode**
 
 Submission of reCAPTCHA supports optional parameters.  Check **All supported arguments** for more details.
 
@@ -83,24 +71,42 @@ Submission of reCAPTCHA supports optional parameters.  Check **All supported arg
 
 ``` -pageurl https://domain.com -sitekey 9ZgGgmzUAAAAALGtLb_FxC0LXm_GwCLyJAffbUCB``` 
 
-#### Retrieve captcha by id
+#### Tiktok
 
-Use this to get the solution after you received a captcha ID back by submitting: reCAPTCHA, GeeTest, Capy or hCAPTCHA
+```
+imagetyperz-tool.exe -token YOUR_TOKEN -mode submit_tiktok -pageurl https://tiktok.com -cookie_input s_v_web_id:verify_kd6243o_fd449FX_FDGG_1x8E_8NiQ_fgrg9FEIJ3f;tt_webid:612465623570154;
+```
 
-```imagetyperz-tool.exe -token YOUR_TOKEN -mode retrieve_captcha -captchaid 4837456```
+#### Retrieve response
+
+Use this to get the solution after you received a captcha ID.
+
+```imagetyperz-tool.exe -token YOUR_TOKEN -mode retrieve_response -captchaid 4837456```
 
 This should be executed few seconds after the submission, to allow the system to solve the captcha.
-If captcha was not solved yet, you'll get the following error `NOT_DECODED`.  In that case, wait 5 more seconds and retry.
+If captcha was not solved yet, you'll get an empty response.  In that case, wait 10 more seconds and retry.
+
+```json
+{
+    "CaptchaId": "178196224",
+    "Response": "P0_eyJ0e...O7qSwd_mdrmEjR565LNqQeHkaf4I9DPL7E",
+    "Cookie_OutPut": "",
+    "Proxy_reason": "",
+    "Recaptcha score": "0.00",
+    "Status": "Solved"
+}
+```
+
+A JSON object is returned back, which contains the response and some other parameters such as captchaID.
+
+**IMPORTANT**
+If you're only interested in the response, `-response_only yes` can be used as arguments.
+
+```imagetyperz-tool.exe -token YOUR_TOKEN -mode retrieve_response -captchaid 4837456 -response_only yes```
 
 #### Set captcha bad
 
 ```imagetyperz-tool.exe -token YOUR_TOKEN -mode set_captcha_bad -captchaid 4837456```
-
-#### Proxy status
-
-Use this if you want to check the proxy status (if it was used or not), in case you submitted reCAPTCHA with proxy.
-
-```imagetyperz-tool.exe -token YOUR_TOKEN -mode proxy_status -captchaid 4837456```
 
 ### Compiled version
 
@@ -112,19 +118,18 @@ If you don't want to compile from source, you can find the `imagetyperz-tool.exe
 
 - **-mode** *
   - `get_balance`
-  - `solve_image`
+  - `submit_image`
   - `submit_recaptcha`
   - `submit_geetest`
   - `submit_capy`
   - `submit_hcaptcha`
-  - `retrieve_captcha`
+  - `submit_tiktok`
+  - `retrieve_response`
   - `set_captcha_bad`
-  - `proxy_status`
-- **-token** ** (token, for authentication to service)
-- **-username** ** (instead of using token, use username and password of account to authenticate)
-- **-password** ** (password of account)
-- **-output** (output file path, in which to write result. Will print to console too)
+- **-token** (token, for authentication to service API)
+- **-output** (output file path, in which to write result. Will print to console (stdout) too, regardless)
 - **-captchaid** (used by retrieve methods, set captcha bad and get proxy status)
+- **-response_only** (used with `retrieve_response` mode, to return only response instead of JSON object)
 - **-pageurl** (`required` when solving reCAPTCHA, Capy and hCAPTCHA)
 - **-sitekey** (`required` when solving reCAPTCHA, Capy and hCAPTCHA)
 - **-type** (used in solving reCAPTCHA,  `2` invisible, `3` v3, defaults to `1` regular, `optional`)
@@ -132,20 +137,21 @@ If you don't want to compile from source, you can find the `imagetyperz-tool.exe
 - **-v3action** (once again, in v3 solving, check reCAPTCHA docs to find out how it's used, `optional`)
 - **-useragent** (when specified, will be used in solving captchas, `optional`)
 - **-datas** (recaptcha data-s value for solving `optional`)
-- **-proxy** (can be `IP:Port` or `IP:Port:User:Password`, for authentication. Used in solving reCAPTCHA, `optional`)
+- **-proxy** (can be `IP:Port` or `IP:Port:User:Password`, for authentication, `optional`)
 - **-image** (used when solving image captcha. It's the path of the image file)
-- **-iscase** (case sensitive, `optional` parameter for image captcha)
-- **-isphrase** (tells if captcha is composed of multiple words, `optional` parameter for image captcha)
-- **-ismath** (captcha is mathematical and has to be calculated, `optional` parameter for image captcha)
-- **-alphanumeric** `optional`
+- **-iscase** (case sensitive, `optional` for image captcha only)
+- **-isphrase** (tells if captcha is composed of multiple words, `optional` for image captcha only)
+- **-ismath** (captcha is mathematical and has to be calculated, `optional` for image captcha only)
+- **-alphanumeric**  (`optional` for image captcha only)
   - `1` - digits only
   - `2` - letters only
   - `0`, default (all characters)
-- **-minlength** (minimum length of captcha characters, a number, `optional`)
-- **-maxlength** (maximum length of captcha characters, a number, `optional`)
+- **-minlength** (minimum length of captcha characters, a number, for image captcha, `optional` for image captcha only)
+- **-maxlength** (maximum length of captcha characters, a number, for image captcha, `optional` for image captcha only)
 - **-domain** (domain used for solving GeeTest captcha, `required`)
 - **-challenge** (challenge used for solving GeeTest captcha, `required`. Keep in mind, once challenge is used, it gets invalidated and a new one has to be sent for solving)
 - **-gt** (gt used for solving GeeTest captcha, `required`)
+- **-cookie_input** (used in tiktok solving, `required` [for tiktok])
 
 ---
 

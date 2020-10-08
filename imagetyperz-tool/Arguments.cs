@@ -14,10 +14,13 @@ namespace imagetyperz_tool
         private string _captcha_file = "";
         private string _output_file = "";
         private string _ref_id = "";
+
+        // recaptcha, capy, hcaptcha and tiktok (tiktok only pageurl)
         private string _page_url = "";
         private string _site_key = "";
 
         private string _captcha_id = "";
+        private string _cookie_input = "";
 
         private string _proxy = "";
         private string _token = "";
@@ -29,6 +32,7 @@ namespace imagetyperz_tool
         private string _v3_score = "";
 
         private string _user_agent = "";
+        private bool _response_only = false;
 
         // image
         private bool _case_sensitive = false;
@@ -90,6 +94,22 @@ namespace imagetyperz_tool
         public void set_max_length(int n)
         {
             this._max_length = n;
+        }
+        public void set_response_only(bool b)
+        {
+            this._response_only = b;
+        }
+        public void set_cookie_input (string c)
+        {
+            this._cookie_input = c;
+        }
+        public string get_cookie_input()
+        {
+            return this._cookie_input;
+        }
+        public bool get_response_only()
+        {
+            return this._response_only;
         }
         public bool get_is_phrase()
         {
