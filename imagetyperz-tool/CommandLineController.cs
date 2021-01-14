@@ -79,7 +79,7 @@ namespace imagetyperz_tool
             if (d.ContainsKey("-challenge")) this._arguments.set_gt_challenge(d["-challenge"]);
             if (d.ContainsKey("-gt")) this._arguments.set_gt_gt(d["-gt"]);
 
-            // tiktok
+            // recaptcha & tiktok
             if (d.ContainsKey("-cookie_input")) this._arguments.set_cookie_input(d["-cookie_input"]);
         }
 
@@ -150,6 +150,7 @@ namespace imagetyperz_tool
                     if (!string.IsNullOrWhiteSpace(a.get_v3_score())) d.Add("v3_min_score", a.get_v3_score());
                     if (!string.IsNullOrWhiteSpace(a.get_user_agent())) d.Add("user_agent", a.get_user_agent());
                     if (!string.IsNullOrWhiteSpace(a.get_datas())) d.Add("data-s", a.get_datas());
+                    if (!string.IsNullOrWhiteSpace(a.get_cookie_input())) d.Add("cookie_input", a.get_cookie_input());
                     if (!string.IsNullOrWhiteSpace(a.get_proxy())) d.Add("proxy", a.get_proxy());
                     if (!string.IsNullOrWhiteSpace(a.get_user_agent())) d.Add("user_agent", a.get_user_agent());
                     string cid = i.submit_recaptcha(d);

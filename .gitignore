@@ -1,1 +1,4 @@
 .vs
+imagetyperz-tool/bin/
+imagetyperz-tool/obj/
+packages

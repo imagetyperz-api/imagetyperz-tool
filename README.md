@@ -11,8 +11,9 @@ This tool was developed to easily solve captchas through imagetyperz service, fr
 
   - v2
   - invisible
-
   - v3 
+  - enterprise v2
+  - enterprise v3
 - GeeTest
 - Capy
 - hCAPTCHA
@@ -132,11 +133,17 @@ If you don't want to compile from source, you can find the `imagetyperz-tool.exe
 - **-response_only** (used with `retrieve_response` mode, to return only response instead of JSON object)
 - **-pageurl** (`required` when solving reCAPTCHA, Capy and hCAPTCHA)
 - **-sitekey** (`required` when solving reCAPTCHA, Capy and hCAPTCHA)
-- **-type** (used in solving reCAPTCHA,  `2` invisible, `3` v3, defaults to `1` regular, `optional`)
+- **-type** (used in solving reCAPTCHA)
+  - `1` - v2
+  - `2` - invisible
+  - `3` - v3
+  - `4` - enterprise v2
+  - `5` - enterprise v3
 - **-v3minscore** (useful when solving v3 recaptcha, when set, has to be a float number, `optional`)
 - **-v3action** (once again, in v3 solving, check reCAPTCHA docs to find out how it's used, `optional`)
 - **-useragent** (when specified, will be used in solving captchas, `optional`)
 - **-datas** (recaptcha data-s value for solving `optional`)
+- **-cookie_input** (used in recaptcha and tiktok solving)
 - **-proxy** (can be `IP:Port` or `IP:Port:User:Password`, for authentication, `optional`)
 - **-image** (used when solving image captcha. It's the path of the image file)
 - **-iscase** (case sensitive, `optional` for image captcha only)
@@ -151,7 +158,6 @@ If you don't want to compile from source, you can find the `imagetyperz-tool.exe
 - **-domain** (domain used for solving GeeTest captcha, `required`)
 - **-challenge** (challenge used for solving GeeTest captcha, `required`. Keep in mind, once challenge is used, it gets invalidated and a new one has to be sent for solving)
 - **-gt** (gt used for solving GeeTest captcha, `required`)
-- **-cookie_input** (used in tiktok solving, `required` [for tiktok])
 
 ---
 
