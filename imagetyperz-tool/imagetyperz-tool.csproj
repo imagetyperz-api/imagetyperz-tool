@@ -31,8 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="imagetyperzapi">
-      <HintPath>..\..\imagetyperzapi.dll</HintPath>
+    <Reference Include="imagetyperzapi, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Z:\imagetyperz-api-csharp\binary\imagetyperzapi.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\Newtonsoft.Json.dll</HintPath>

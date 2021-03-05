@@ -79,6 +79,10 @@ namespace imagetyperz_tool
             if (d.ContainsKey("-challenge")) this._arguments.set_gt_challenge(d["-challenge"]);
             if (d.ContainsKey("-gt")) this._arguments.set_gt_gt(d["-gt"]);
 
+            // funcaptcha
+            if (d.ContainsKey("-s_url")) this._arguments.set_s_url(d["-s_url"]);
+            if (d.ContainsKey("-data")) this._arguments.set_data(d["-data"]);
+
             // recaptcha & tiktok
             if (d.ContainsKey("-cookie_input")) this._arguments.set_cookie_input(d["-cookie_input"]);
         }
@@ -215,6 +219,23 @@ namespace imagetyperz_tool
                     dcc.Add("cookie_input", cookie_input);
                     string tiktok_id = i.submit_tiktok(dcc);
                     this.show_output(tiktok_id);
+                    break;
+                case "submit_funcaptcha":
+                    string page_urlfc = a.get_page_url();
+                    string site_keyfc = a.get_site_key();
+                    if (string.IsNullOrWhiteSpace(page_urlfc)) throw new Exception("Invalid pageurl");
+                    if (string.IsNullOrWhiteSpace(site_keyfc)) throw new Exception("Invalid sitekey");
+                    Dictionary<string, string> dcf = new Dictionary<string, string>();
+                    dcf.Add("page_url", page_urlfc);
+                    dcf.Add("sitekey", site_keyfc);
+
+                    // others
+                    if (!string.IsNullOrWhiteSpace(a.get_s_url())) dcf.Add("s_url", a.get_s_url());
+                    if (!string.IsNullOrWhiteSpace(a.get_data())) dcf.Add("data", a.get_data());
+                    if (!string.IsNullOrWhiteSpace(a.get_proxy())) dcf.Add("proxy", a.get_proxy());
+                    if (!string.IsNullOrWhiteSpace(a.get_user_agent())) dcf.Add("user_agent", a.get_user_agent());
+                    string funcaptcha_id = i.submit_funcaptcha(dcf);
+                    this.show_output(funcaptcha_id);
                     break;
                 case "retrieve_response":
                     string kid = a.get_captcha_id();

@@ -47,6 +47,30 @@ namespace imagetyperz_tool
         private string _gt_challenge = "";
         private string _gt_gt = "";
 
+        // funcaptcha
+        private string _s_url = "";
+        private string _data = "";
+
+        public void set_s_url(string s)
+        {
+            this._s_url = s;
+        }
+
+        public void set_data(string s)
+        {
+            this._data = s;
+        }
+
+        public string get_s_url()
+        {
+            return this._s_url;
+        }
+
+        public string get_data()
+        {
+            return this._data;
+        }
+
         public void set_gt_domain(string s)
         {
             this._gt_domain = s;
