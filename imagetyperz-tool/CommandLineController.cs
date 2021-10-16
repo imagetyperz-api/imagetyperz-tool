@@ -69,6 +69,7 @@ namespace imagetyperz_tool
             if (d.ContainsKey("-image")) this._arguments.set_captcha_file((d["-image"]));
             if (d.ContainsKey("-iscase")) this._arguments.set_case_sensitive(true);
             if (d.ContainsKey("-ismath")) this._arguments.set_is_math();
+            if (d.ContainsKey("-invisiblehcaptcha")) this._arguments.set_invisible_hcaptcha();
             if (d.ContainsKey("-isphrase")) this._arguments.set_is_phrase();
             if (d.ContainsKey("-alphanumeric")) this._arguments.set_alphanumeric(int.Parse(d["-alphanumeric"]));
             if (d.ContainsKey("-minlength")) this._arguments.set_min_length(int.Parse(d["-minlength"]));
@@ -168,6 +169,7 @@ namespace imagetyperz_tool
                     Dictionary<string, string> dh = new Dictionary<string, string>();
                     if (!string.IsNullOrWhiteSpace(a.get_proxy())) dh.Add("proxy", a.get_proxy());
                     if (!string.IsNullOrWhiteSpace(a.get_user_agent())) dh.Add("user_agent", a.get_user_agent());
+                    if (a.get_invisible_hcaptcha()) dh.Add("invisible", "1");
                     dh.Add("page_url", page_urlh);
                     dh.Add("sitekey", site_keyh);
                     string hcaptcha_id_sub = i.submit_hcaptcha(dh);

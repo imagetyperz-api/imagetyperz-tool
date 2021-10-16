@@ -156,6 +156,7 @@ If you don't want to compile from source, you can find the `imagetyperz-tool.exe
 - **-iscase** (case sensitive, `optional` for image captcha only)
 - **-isphrase** (tells if captcha is composed of multiple words, `optional` for image captcha only)
 - **-ismath** (captcha is mathematical and has to be calculated, `optional` for image captcha only)
+- **-invisiblehcaptcha** (used if hcaptcha is invisible, `optional` for hcaptcha only)
 - **-alphanumeric**  (`optional` for image captcha only)
   - `1` - digits only
   - `2` - letters only

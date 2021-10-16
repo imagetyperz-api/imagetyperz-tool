@@ -38,6 +38,7 @@ namespace imagetyperz_tool
         private bool _case_sensitive = false;
         private bool _is_phrase = false;
         private bool _is_math = false;
+        private bool _invisible_hcaptcha = false;
         private int _alphanumeric = -1;
         private int _min_length = -1;
         private int _max_length = -1;
@@ -107,6 +108,10 @@ namespace imagetyperz_tool
         {
             this._is_math = true;
         }
+        public void set_invisible_hcaptcha()
+        {
+            this._invisible_hcaptcha = true;
+        }
         public void set_alphanumeric(int n)
         {
             this._alphanumeric = n;
@@ -142,6 +147,10 @@ namespace imagetyperz_tool
         public bool get_is_math()
         {
             return this._is_math;
+        }
+        public bool get_invisible_hcaptcha()
+        {
+            return this._invisible_hcaptcha;
         }
         public int get_alpha_numeric()
         {
