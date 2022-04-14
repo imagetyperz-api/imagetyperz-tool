@@ -15,6 +15,7 @@ This tool was developed to easily solve captchas through imagetyperz service, fr
   - enterprise v2
   - enterprise v3
 - GeeTest
+- GeeTestV4
 - Capy
 - hCAPTCHA
 - Tiktok
@@ -60,6 +61,12 @@ Submission of reCAPTCHA supports optional parameters.  Check **All supported arg
 ```imagetyperz-tool.exe -token YOUR_TOKEN -mode submit_geetest```
 
 ```-domain https://yourdomain.com -challenge 1a4ac2477c5be6589073cb05ccbd385f -gt 8a361081b2211c344092f2e2fd4f58bf``` 
+
+#### GeeTestV4
+
+```imagetyperz-tool.exe -token YOUR_TOKEN -mode submit_geetest_v4```
+
+```-domain https://example.com -geetestid 647f5ed2ed8acb4be36784e01556bb71``` 
 
 #### Capy
 
@@ -128,6 +135,7 @@ If you don't want to compile from source, you can find the `imagetyperz-tool.exe
   - `submit_image`
   - `submit_recaptcha`
   - `submit_geetest`
+  - `submit_geetest_v4`
   - `submit_capy`
   - `submit_hcaptcha`
   - `submit_tiktok`
@@ -166,6 +174,7 @@ If you don't want to compile from source, you can find the `imagetyperz-tool.exe
 - **-domain** (domain used for solving GeeTest captcha, `required`)
 - **-challenge** (challenge used for solving GeeTest captcha, `required`. Keep in mind, once challenge is used, it gets invalidated and a new one has to be sent for solving)
 - **-gt** (gt used for solving GeeTest captcha, `required`)
+- **-geetestid** (captchaID used for solving GeetestV4, `required`)
 - **-s_url** (used for solving FunCaptcha, `required`)
 - **-data** (extra data in JSON format, used for solving FunCaptcha, `optional`)
 
