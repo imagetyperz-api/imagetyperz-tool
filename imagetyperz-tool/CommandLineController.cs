@@ -79,6 +79,8 @@ namespace imagetyperz_tool
             if (d.ContainsKey("-domain")) this._arguments.set_gt_domain(d["-domain"]);
             if (d.ContainsKey("-challenge")) this._arguments.set_gt_challenge(d["-challenge"]);
             if (d.ContainsKey("-gt")) this._arguments.set_gt_gt(d["-gt"]);
+            // geetest v4
+            if (d.ContainsKey("-geetestid")) this._arguments.set_gt_geetestid(d["-geetestid"]);
 
             // funcaptcha
             if (d.ContainsKey("-s_url")) this._arguments.set_s_url(d["-s_url"]);
@@ -207,6 +209,22 @@ namespace imagetyperz_tool
                     if (!string.IsNullOrWhiteSpace(a.get_user_agent())) dg.Add("user_agent", a.get_user_agent());
                     string geetest_id_sub = i.submit_geetest(dg);
                     this.show_output(geetest_id_sub);
+                    break;
+                case "submit_geetest_v4":
+                    string gt_v4_domain = a.get_gt_domain();
+                    string gt_v4_geetestid = a.get_gt_geetestid();
+                    if (string.IsNullOrWhiteSpace(gt_v4_domain)) throw new Exception("Invalid domain");
+                    if (string.IsNullOrWhiteSpace(gt_v4_geetestid)) throw new Exception("Invalid geetestid");
+
+                    Dictionary<string, string> dg4 = new Dictionary<string, string>();
+                    dg4.Add("domain", gt_v4_domain);
+                    dg4.Add("geetestid", gt_v4_geetestid);
+
+                    // optional
+                    if (!string.IsNullOrWhiteSpace(a.get_proxy())) dg4.Add("proxy", a.get_proxy());
+                    if (!string.IsNullOrWhiteSpace(a.get_user_agent())) dg4.Add("user_agent", a.get_user_agent());
+                    string geetest_v4_id_sub = i.submit_geetest_v4(dg4);
+                    this.show_output(geetest_v4_id_sub);
                     break;
                 case "submit_tiktok":
                     string page_urlt = a.get_page_url();

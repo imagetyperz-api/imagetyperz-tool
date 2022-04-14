@@ -47,6 +47,7 @@ namespace imagetyperz_tool
         private string _gt_domain = "";
         private string _gt_challenge = "";
         private string _gt_gt = "";
+        private string _gt_geetestid = "";
 
         // funcaptcha
         private string _s_url = "";
@@ -95,6 +96,14 @@ namespace imagetyperz_tool
         public string get_gt_gt()
         {
             return this._gt_gt;
+        }
+        public void set_gt_geetestid(string s)
+        {
+            this._gt_geetestid = s;
+        }
+        public string get_gt_geetestid()
+        {
+            return this._gt_geetestid;
         }
         public void set_user_agent(string user_agent)
         {
