@@ -39,6 +39,7 @@ namespace imagetyperz_tool
         private bool _is_phrase = false;
         private bool _is_math = false;
         private bool _invisible_hcaptcha = false;
+        private string _hcaptcha_enterprise = "";
         private int _alphanumeric = -1;
         private int _min_length = -1;
         private int _max_length = -1;
@@ -52,6 +53,31 @@ namespace imagetyperz_tool
         // funcaptcha
         private string _s_url = "";
         private string _data = "";
+
+        // task
+        private string _template_name = "";
+        private string _variables = "";
+
+        public void set_template_name(string s)
+        {
+            this._template_name = s;
+        }
+
+        public void set_variables(string s)
+        {
+            this._variables = s;
+        }
+
+        public string get_template_name()
+        {
+            return this._template_name;
+        }
+
+        public string get_variables()
+        {
+            return this._variables;
+        }
+
 
         public void set_s_url(string s)
         {
@@ -329,6 +355,15 @@ namespace imagetyperz_tool
         public void set_datas(string datas)
         {
             this._datas = datas;
+        }
+
+        public string get_hcaptcha_enterprise()
+        {
+            return _hcaptcha_enterprise;
+        }
+        public void set_hcaptcha_enterprise(string s)
+        {
+            this._hcaptcha_enterprise = s;
         }
     }
 }

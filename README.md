@@ -20,6 +20,7 @@ This tool was developed to easily solve captchas through imagetyperz service, fr
 - hCAPTCHA
 - Tiktok
 - FunCaptcha
+- Task
 
 #### Other supported methods:
 
@@ -91,6 +92,12 @@ imagetyperz-tool.exe -token YOUR_TOKEN -mode submit_tiktok -pageurl https://tikt
 imagetyperz-tool.exe -token YOUR_TOKEN -mode submit_funcaptcha -pageurl https://domain.com -sitekey 11111111-1111-1111-1111-111111111111 -s_url https://api.arkoselabs.com
 ```
 
+#### Task
+
+```imagetyperz-tool.exe -token YOUR_TOKEN -mode submit_task```
+
+``` -pageurl https://imagetyperz.net/automation/login -templatename "Login test page" -variables {\"username\": \"abc\", \"password\": \"paZZW0rd\"}``` 
+
 #### Retrieve response
 
 Use this to get the solution after you received a captcha ID.
@@ -139,6 +146,7 @@ If you don't want to compile from source, you can find the `imagetyperz-tool.exe
   - `submit_capy`
   - `submit_hcaptcha`
   - `submit_tiktok`
+  - `submit_task`
   - `submit_funcaptcha`
   - `retrieve_response`
   - `set_captcha_bad`
@@ -165,6 +173,9 @@ If you don't want to compile from source, you can find the `imagetyperz-tool.exe
 - **-isphrase** (tells if captcha is composed of multiple words, `optional` for image captcha only)
 - **-ismath** (captcha is mathematical and has to be calculated, `optional` for image captcha only)
 - **-invisiblehcaptcha** (used if hcaptcha is invisible, `optional` for hcaptcha only)
+- **-hcaptchaenterprise** (extra parameters as stringified JSON, useful in solving hcaptcha enterprise, `optional` for hcaptcha only)
+- **-templatename** (used for task captcha, `requred` for task only)
+- **-variables** (used for task captcha, `optional` for task only)
 - **-alphanumeric**  (`optional` for image captcha only)
   - `1` - digits only
   - `2` - letters only

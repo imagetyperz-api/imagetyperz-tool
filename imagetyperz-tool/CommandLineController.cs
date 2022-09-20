@@ -29,7 +29,7 @@ namespace imagetyperz_tool
                 {
                     break;
                 }
-                d.Add(args[i].Replace("\"", "").Trim(), args[i + 1].Replace("\"", "").Trim());
+                d.Add(args[i].Replace("\"", "").Trim(), args[i + 1].Trim());
             }
 
             // check our dicts length first
@@ -69,11 +69,14 @@ namespace imagetyperz_tool
             if (d.ContainsKey("-image")) this._arguments.set_captcha_file((d["-image"]));
             if (d.ContainsKey("-iscase")) this._arguments.set_case_sensitive(true);
             if (d.ContainsKey("-ismath")) this._arguments.set_is_math();
-            if (d.ContainsKey("-invisiblehcaptcha")) this._arguments.set_invisible_hcaptcha();
             if (d.ContainsKey("-isphrase")) this._arguments.set_is_phrase();
             if (d.ContainsKey("-alphanumeric")) this._arguments.set_alphanumeric(int.Parse(d["-alphanumeric"]));
             if (d.ContainsKey("-minlength")) this._arguments.set_min_length(int.Parse(d["-minlength"]));
             if (d.ContainsKey("-maxlength")) this._arguments.set_max_length(int.Parse(d["-maxlength"]));
+
+            // hcaptcha
+            if (d.ContainsKey("-invisiblehcaptcha")) this._arguments.set_invisible_hcaptcha();
+            if (d.ContainsKey("-hcaptchaenterprise")) this._arguments.set_hcaptcha_enterprise(d["hcaptchaenterprise"]);
 
             // geetest
             if (d.ContainsKey("-domain")) this._arguments.set_gt_domain(d["-domain"]);
@@ -86,6 +89,13 @@ namespace imagetyperz_tool
             if (d.ContainsKey("-s_url")) this._arguments.set_s_url(d["-s_url"]);
             if (d.ContainsKey("-data")) this._arguments.set_data(d["-data"]);
 
+            // task
+            if (d.ContainsKey("-templatename"))
+                this._arguments.set_template_name(d["-templatename"]);
+            if (d.ContainsKey("-variables"))
+            {
+                this._arguments.set_variables(d["-variables"]);
+            }
             // recaptcha & tiktok
             if (d.ContainsKey("-cookie_input")) this._arguments.set_cookie_input(d["-cookie_input"]);
         }
@@ -171,6 +181,7 @@ namespace imagetyperz_tool
                     Dictionary<string, string> dh = new Dictionary<string, string>();
                     if (!string.IsNullOrWhiteSpace(a.get_proxy())) dh.Add("proxy", a.get_proxy());
                     if (!string.IsNullOrWhiteSpace(a.get_user_agent())) dh.Add("user_agent", a.get_user_agent());
+                    if (!string.IsNullOrWhiteSpace(a.get_hcaptcha_enterprise())) dh.Add("HcaptchaEnterprise", a.get_hcaptcha_enterprise());
                     if (a.get_invisible_hcaptcha()) dh.Add("invisible", "1");
                     dh.Add("page_url", page_urlh);
                     dh.Add("sitekey", site_keyh);
@@ -190,6 +201,21 @@ namespace imagetyperz_tool
                     dc.Add("sitekey", site_keyc);
                     string capy_id_sub = i.submit_capy(dc);
                     this.show_output(capy_id_sub);
+                    break;
+                case "submit_task":
+                    string page_urlt = a.get_page_url();
+                    string template_name = a.get_template_name();
+                    if (string.IsNullOrWhiteSpace(page_urlt)) throw new Exception("Invalid pageurl");
+                    if (string.IsNullOrWhiteSpace(template_name)) throw new Exception("Invalid templatename");
+
+                    Dictionary<string, string> dt = new Dictionary<string, string>();
+                    if (!string.IsNullOrWhiteSpace(a.get_proxy())) dt.Add("proxy", a.get_proxy());
+                    if (!string.IsNullOrWhiteSpace(a.get_user_agent())) dt.Add("user_agent", a.get_user_agent());
+                    if (!string.IsNullOrWhiteSpace(a.get_variables())) dt.Add("variables", a.get_variables());
+                    dt.Add("page_url", page_urlt);
+                    dt.Add("template_name", template_name);
+                    string task_id = i.submit_task(dt);
+                    this.show_output(task_id);
                     break;
                 case "submit_geetest":
                     string gt_domain = a.get_gt_domain();
@@ -227,15 +253,15 @@ namespace imagetyperz_tool
                     this.show_output(geetest_v4_id_sub);
                     break;
                 case "submit_tiktok":
-                    string page_urlt = a.get_page_url();
+                    string page_urltk = a.get_page_url();
                     string cookie_input = a.get_cookie_input();
-                    if (string.IsNullOrWhiteSpace(page_urlt)) throw new Exception("Invalid pageurl");
+                    if (string.IsNullOrWhiteSpace(page_urltk)) throw new Exception("Invalid pageurl");
                     if (string.IsNullOrWhiteSpace(cookie_input)) throw new Exception("Invalid cookie_input");
 
                     Dictionary<string, string> dcc = new Dictionary<string, string>();
                     if (!string.IsNullOrWhiteSpace(a.get_proxy())) dcc.Add("proxy", a.get_proxy());
                     if (!string.IsNullOrWhiteSpace(a.get_user_agent())) dcc.Add("user_agent", a.get_user_agent());
-                    dcc.Add("page_url", page_urlt);
+                    dcc.Add("page_url", page_urltk);
                     dcc.Add("cookie_input", cookie_input);
                     string tiktok_id = i.submit_tiktok(dcc);
                     this.show_output(tiktok_id);
