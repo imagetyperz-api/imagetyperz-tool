@@ -283,6 +283,13 @@ namespace imagetyperz_tool
                     string funcaptcha_id = i.submit_funcaptcha(dcf);
                     this.show_output(funcaptcha_id);
                     break;
+                case "task_push_variables":
+                    string tpcid = a.get_captcha_id();
+                    if (string.IsNullOrWhiteSpace(tpcid)) throw new Exception("id is invalid");
+                    string variables = a.get_variables();
+                    i.task_push_variables(tpcid, variables);        // set it bad
+                    this.show_output("variables pushed");     // show response
+                    break;
                 case "retrieve_response":
                     string kid = a.get_captcha_id();
                     if (string.IsNullOrWhiteSpace(kid)) throw new Exception("id is invalid");

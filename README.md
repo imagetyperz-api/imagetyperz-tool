@@ -94,9 +94,22 @@ imagetyperz-tool.exe -token YOUR_TOKEN -mode submit_funcaptcha -pageurl https://
 
 #### Task
 
-```imagetyperz-tool.exe -token YOUR_TOKEN -mode submit_task```
+```imagetyperz-tool.exe -token YOUR_TOKEN -mode submit_task  -pageurl https://imagetyperz.net/automation/login -templatename "Login test page" -variables {\"username\": \"abc\", \"password\": \"paZZW0rd\"}```
 
-``` -pageurl https://imagetyperz.net/automation/login -templatename "Login test page" -variables {\"username\": \"abc\", \"password\": \"paZZW0rd\"}``` 
+#### Task pushVariable
+
+Update a variable value while task is running. Useful when dealing with 2FA authentication.
+
+When template reaches an action that uses a variable which wasn't provided with the submission of the task,
+task (while running on worker machine) will wait for variable to be updated through push.
+
+You can use the pushVariables method as many times as you need, even overwriting previously set variables.
+
+```
+imagetyperz-tool.exe -token YOUR_TOKEN -mode task_push_variables -captchaid 12345 -variables "{\"twofactor_code\": \"89763\"}"
+```
+
+
 
 #### Retrieve response
 
@@ -148,6 +161,7 @@ If you don't want to compile from source, you can find the `imagetyperz-tool.exe
   - `submit_tiktok`
   - `submit_task`
   - `submit_funcaptcha`
+  - `task_push_variables`
   - `retrieve_response`
   - `set_captcha_bad`
 - **-token** (token, for authentication to service API)
