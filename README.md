@@ -20,6 +20,7 @@ This tool was developed to easily solve captchas through imagetyperz service, fr
 - hCAPTCHA
 - Tiktok
 - FunCaptcha
+- Turnstile (Cloudflare)
 - Task
 
 #### Other supported methods:
@@ -88,8 +89,15 @@ imagetyperz-tool.exe -token YOUR_TOKEN -mode submit_tiktok -pageurl https://tikt
 ```
 
 #### FunCaptcha
+
 ```
 imagetyperz-tool.exe -token YOUR_TOKEN -mode submit_funcaptcha -pageurl https://domain.com -sitekey 11111111-1111-1111-1111-111111111111 -s_url https://api.arkoselabs.com
+```
+
+#### Turnstile (Cloudflare)
+
+```
+imagetyperz-tool.exe -token YOUR_TOKEN -mode submit_turnstile -pageurl https://domain.com -sitekey 0x4ABBBBAABrfvW5vKbx11FZ
 ```
 
 #### Task
@@ -126,7 +134,6 @@ If captcha was not solved yet, you'll get an empty response.  In that case, wait
     "Response": "P0_eyJ0e...O7qSwd_mdrmEjR565LNqQeHkaf4I9DPL7E",
     "Cookie_OutPut": "",
     "Proxy_reason": "",
-    "Recaptcha score": "0.00",
     "Status": "Solved"
 }
 ```
@@ -150,7 +157,7 @@ If you don't want to compile from source, you can find the `imagetyperz-tool.exe
 
 #### All supported arguments
 
-- **-mode** *
+- **-mode**
   - `get_balance`
   - `submit_image`
   - `submit_recaptcha`
@@ -159,8 +166,9 @@ If you don't want to compile from source, you can find the `imagetyperz-tool.exe
   - `submit_capy`
   - `submit_hcaptcha`
   - `submit_tiktok`
-  - `submit_task`
   - `submit_funcaptcha`
+  - `submit_turnstile`
+  - `submit_task`
   - `task_push_variables`
   - `retrieve_response`
   - `set_captcha_bad`
@@ -168,8 +176,8 @@ If you don't want to compile from source, you can find the `imagetyperz-tool.exe
 - **-output** (output file path, in which to write result. Will print to console (stdout) too, regardless)
 - **-captchaid** (used by retrieve methods, set captcha bad and get proxy status)
 - **-response_only** (used with `retrieve_response` mode, to return only response instead of JSON object)
-- **-pageurl** (`required` when solving reCAPTCHA, Capy and hCAPTCHA)
-- **-sitekey** (`required` when solving reCAPTCHA, Capy and hCAPTCHA)
+- **-pageurl** (`required` when solving reCAPTCHA, Capy, hCAPTCHA, Turnstile)
+- **-sitekey** (`required` when solving reCAPTCHA, Capy, hCAPTCHA, Turnstile)
 - **-type** (used in solving reCAPTCHA)
   - `1` - v2
   - `2` - invisible
@@ -196,12 +204,14 @@ If you don't want to compile from source, you can find the `imagetyperz-tool.exe
   - `0`, default (all characters)
 - **-minlength** (minimum length of captcha characters, a number, for image captcha, `optional` for image captcha only)
 - **-maxlength** (maximum length of captcha characters, a number, for image captcha, `optional` for image captcha only)
-- **-domain** (domain used for solving GeeTest captcha, `required`)
+- **-domain** (domain used for solving GeeTest captcha, `required`. Also used for solving Turnstile, `optional` in this case)
 - **-challenge** (challenge used for solving GeeTest captcha, `required`. Keep in mind, once challenge is used, it gets invalidated and a new one has to be sent for solving)
 - **-gt** (gt used for solving GeeTest captcha, `required`)
 - **-geetestid** (captchaID used for solving GeetestV4, `required`)
 - **-s_url** (used for solving FunCaptcha, `required`)
 - **-data** (extra data in JSON format, used for solving FunCaptcha, `optional`)
+- **-cdata** (used in solving Turnstile, `optional`)
+- **-action** (used in solving Turnstile, `optional`)
 
 ---
 

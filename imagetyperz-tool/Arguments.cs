@@ -58,6 +58,43 @@ namespace imagetyperz_tool
         private string _template_name = "";
         private string _variables = "";
 
+        // recaptcha and hcaptcha
+        private string _domain = "";
+
+        // turnstile
+        private string _action = "";
+        private string _cdata = "";
+
+        public void set_cdata(string s)
+        {
+            this._cdata = s;
+        }
+
+        public string get_cdata()
+        {
+            return this._cdata;
+        }
+
+        public void set_action(string s)
+        {
+            this._action = s;
+        }
+
+        public string get_action()
+        {
+            return this._action;
+        }
+
+        public void set_domain(string s)
+        {
+            this._domain = s;
+        }
+
+        public string get_domain()
+        {
+            return this._domain;
+        }
+
         public void set_template_name(string s)
         {
             this._template_name = s;

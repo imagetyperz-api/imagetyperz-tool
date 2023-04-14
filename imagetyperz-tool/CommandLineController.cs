@@ -59,6 +59,8 @@ namespace imagetyperz_tool
 
             // reCAPTCHA
             if (d.ContainsKey("-type")) this._arguments.set_type(d["-type"]);
+            // domain is also for hcaptcha and turnstile
+            if (d.ContainsKey("-domain")) this._arguments.set_domain(d["-domain"]);
             if (d.ContainsKey("-v3minscore")) this._arguments.set_v3_score(d["-v3minscore"]);
             if (d.ContainsKey("-v3action")) this._arguments.set_v3_action(d["-v3action"]);
             if (d.ContainsKey("-datas")) this._arguments.set_datas(d["-datas"]);
@@ -76,6 +78,7 @@ namespace imagetyperz_tool
 
             // hcaptcha
             if (d.ContainsKey("-invisiblehcaptcha")) this._arguments.set_invisible_hcaptcha();
+            if (d.ContainsKey("-domain")) this._arguments.set_domain(d["-domain"]);
             if (d.ContainsKey("-hcaptchaenterprise")) this._arguments.set_hcaptcha_enterprise(d["hcaptchaenterprise"]);
 
             // geetest
@@ -88,6 +91,10 @@ namespace imagetyperz_tool
             // funcaptcha
             if (d.ContainsKey("-s_url")) this._arguments.set_s_url(d["-s_url"]);
             if (d.ContainsKey("-data")) this._arguments.set_data(d["-data"]);
+
+            // turnstile
+            if (d.ContainsKey("-action")) this._arguments.set_action(d["-action"]);
+            if (d.ContainsKey("-cdata")) this._arguments.set_cdata(d["-cdata"]);
 
             // task
             if (d.ContainsKey("-templatename"))
@@ -170,6 +177,7 @@ namespace imagetyperz_tool
                     if (!string.IsNullOrWhiteSpace(a.get_cookie_input())) d.Add("cookie_input", a.get_cookie_input());
                     if (!string.IsNullOrWhiteSpace(a.get_proxy())) d.Add("proxy", a.get_proxy());
                     if (!string.IsNullOrWhiteSpace(a.get_user_agent())) d.Add("user_agent", a.get_user_agent());
+                    if (!string.IsNullOrWhiteSpace(a.get_domain())) d.Add("domain", a.get_domain());
                     string cid = i.submit_recaptcha(d);
                     this.show_output(cid);
                     break;
@@ -182,6 +190,7 @@ namespace imagetyperz_tool
                     if (!string.IsNullOrWhiteSpace(a.get_proxy())) dh.Add("proxy", a.get_proxy());
                     if (!string.IsNullOrWhiteSpace(a.get_user_agent())) dh.Add("user_agent", a.get_user_agent());
                     if (!string.IsNullOrWhiteSpace(a.get_hcaptcha_enterprise())) dh.Add("HcaptchaEnterprise", a.get_hcaptcha_enterprise());
+                    if (!string.IsNullOrWhiteSpace(a.get_domain())) dh.Add("domain", a.get_domain());
                     if (a.get_invisible_hcaptcha()) dh.Add("invisible", "1");
                     dh.Add("page_url", page_urlh);
                     dh.Add("sitekey", site_keyh);
@@ -201,6 +210,23 @@ namespace imagetyperz_tool
                     dc.Add("sitekey", site_keyc);
                     string capy_id_sub = i.submit_capy(dc);
                     this.show_output(capy_id_sub);
+                    break;
+                case "submit_turnstile":
+                    string page_urltc = a.get_page_url();
+                    string site_keytc = a.get_site_key();
+                    if (string.IsNullOrWhiteSpace(page_urltc)) throw new Exception("Invalid pageurl");
+                    if (string.IsNullOrWhiteSpace(site_keytc)) throw new Exception("Invalid sitekey");
+
+                    Dictionary<string, string> dtc = new Dictionary<string, string>();
+                    if (!string.IsNullOrWhiteSpace(a.get_proxy())) dtc.Add("proxy", a.get_proxy());
+                    if (!string.IsNullOrWhiteSpace(a.get_user_agent())) dtc.Add("user_agent", a.get_user_agent());
+                    if (!string.IsNullOrWhiteSpace(a.get_domain())) dtc.Add("domain", a.get_domain());
+                    if (!string.IsNullOrWhiteSpace(a.get_action())) dtc.Add("action", a.get_action());
+                    if (!string.IsNullOrWhiteSpace(a.get_cdata())) dtc.Add("cdata", a.get_cdata());
+                    dtc.Add("page_url", page_urltc);
+                    dtc.Add("sitekey", site_keytc);
+                    string turnstile_id = i.submit_turnstile(dtc);
+                    this.show_output(turnstile_id);
                     break;
                 case "submit_task":
                     string page_urlt = a.get_page_url();
